@@ -1,0 +1,47 @@
+% 
+\documentclass[a4paper]{article}
+\usepackage{Sweave}
+
+%\VignetteIndexEntry{The cwmEm package}
+%\VignetteKeywords{vig1}
+%\VignettePackage{cwmEm}
+
+
+\title{The cwmEm package}
+\author{Packard Bell}
+
+\begin{document}
+
+\maketitle
+
+\section{Theory}
+
+
+\section{Example of cwmEm usage}
+
+<<setup,echo=FALSE, results=hide>>=
+	options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
+	set.seed(123)
+	numSim=200
+@
+
+The package is load with following code
+
+<<load,keep.source=TRUE>>=
+library("cwm")
+@
+
+A direct example of usage is 
+
+<<ex1, keep.source=TRUE>>=
+
+library(MASS)
+data(geyser)
+x=geyser[,1]
+y=geyser[,2]                            
+cwrEmExample=cwrEm(x,y,nc=2)
+print(cwrEmExample) 
+@
+
+
+\end{document}

@@ -1,0 +1,7 @@
+exportPattern("^[[:alpha:]]+")
+
+S3method(print, cwrObj)
+S3method(summary, cwrObj)
+S3method(plot, cwrObj)
+S3method(logLik, cwrObj)
+S3method(predict, cwrObj)

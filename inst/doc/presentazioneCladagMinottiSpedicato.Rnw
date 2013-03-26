@@ -1,0 +1,415 @@
+\documentclass[compress]{beamer}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{eurosym}
+\usepackage{textcomp}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{hyperref}
+\usepackage{amssymb}
+%\usepackage{beamer}
+\usepackage{mathtools}
+\usepackage{Sweave}
+\usepackage[latin1]{inputenc}
+%\VignetteIndexEntry{A statistical R package for cluster weighted modelling}
+%\VignetteKeywords{vig2}
+%\VignettePackage{cwm}
+
+
+
+\def\bb{\mathbf{b}}
+\def\bx{\mathbf{x}}
+\def\by{\mathbf{y}}
+\def\bz{\mathbf{z}}
+\def\bc{\mathbf{c}}
+\def\bm{\mathbf{m}}
+\def\bw{\mbox{\bf w}}
+%%\def\bxi{\mathbf {\xi}}
+\def\bA{\mathbf{A}}
+\def\bX{\mathbf{X}}
+\def\bY{\mathbf{Y}}
+\def\bW{\mathbf{W}}
+\def\bB{\mathbf{B}}
+\def\bS{\mathbf{S}}
+\def\bI{\mathbf{I}}
+\def\bL{\mathbf{L}}
+\def\bU{\mathbf{U}}
+\def\bV{\mathbf{V}}
+\def\bZ{\mathbf{Z}}
+\def\b0{\mathbf{0}}
+\def\b1{\mathbf{1}}
+\def\cC{\mathcal{C}}
+\def\cL{\mathcal{L}}
+\def\cN{\mathcal{N}}
+\def\cX{\mathcal{X}}
+\def\mR{\mathbb{R}}
+\def\mN{\mathbb{N}}
+\def\EE{\mathbb{E}}
+\def\tlambda{\tilde{\lambda}}
+\def\bmu{\mbox{\boldmath $\mu$}}
+\def\blambda{\mbox{\boldmath $\lambda$}}
+\def\bpsi{\mbox{\boldmath $\psi$}}
+\def\tbpsi{\tilde{\mbox{\boldmath $\psi$}}}
+\def\balpha{\mbox{\boldmath $\alpha$}}
+\def\bbeta{\mbox{\boldmath $\beta$}}
+\def\bgamma{\mbox{\boldmath $\gamma$}}
+\def\bnu{\mbox{\boldmath $\nu$}}
+\def\bxi{\mbox{\boldmath $\xi$}}
+\def\btheta{\mbox{\boldmath $\theta$}}
+\def\bvartheta{\mbox{\boldmath $\vartheta$}}
+
+\def\bphi{\mbox{\boldmath $\phi$}}
+\def\bpi{\mbox{\boldmath $\pi$}}
+\def\btau{\mbox{\boldmath $\tau$}}
+
+\def\bSigma{\mbox{\boldmath $\Sigma$}}
+\def\bGamma{\mbox{\boldmath $\Gamma$}}
+\def\bLambda{\mbox{\boldmath $\Lambda$}}
+\def\bOmega{\mbox{\boldmath $\Omega$}}
+\def\tbLambda{\tilde{\mbox{\boldmath $\Lambda$}}}
+\def\tbGamma{\tilde{\mbox{\boldmath $\Gamma$}}}
+\def\tbSigma{\tilde{\mbox{\boldmath $\Sigma$}}}
+\def\bPsi{\mbox{\boldmath $\Psi$}}
+\def\bTheta{\mbox{\boldmath $\Theta$}}
+
+\def\sbX{\underset{\sim}{\bX}}
+\def\sbY{\underset{\sim}{\bY}}
+\def\sX{{\underset{\sim}{X}}}
+
+\def\mbx{\bar{\bx}}
+\def\my{\bar{y}}
+\def\mybx{\overline{y\bx}}
+\def\mbxbx{\overline{\bx' \bx}}
+
+\theoremstyle{definition} \newtheorem{defi}{Definition} \newtheorem{thm}{Theorem}
+
+\mode<presentation>
+{
+\usetheme[]{Ilmenau}
+\useoutertheme[subsection=false]{smoothbars}
+\setbeamercovered{transparent}
+}
+
+
+\pgfdeclareimage[height=1.0cm]{logo}{LogoCladagG3}
+
+\def\R{\mathbb{ R}}
+
+\title{A statistical R package for cluster weighted modelling}
+
+
+\titlegraphic{\pgfuseimage{logo}}
+
+\author[Simona Minotti and Giorgio Spedicato]{Simona Minotti$^{\dag}$ \quad Giorgio A. Spedicato$^{\ddag}$}
+\institute[Universit\'a la Sapienza and la Bicocca]{$^{\dag}$Universit\'a La Bicocca \\ Milan, Italy
+\vskip10pt
+$^{\ddag}$ Universit\'a la Sapienza \\ Rome, Italy}
+\date{\today}
+
+\AtBeginSection[]
+{\begin{frame}<beamer>{Outline}
+ \tableofcontents[currentsection]
+ \end{frame}}
+
+
+\begin{document}
+
+\transduration{1}
+
+\begin{frame}
+\transsplitverticalin
+\titlepage
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Table of contents}
+\tableofcontents
+\end{frame}
+
+\section{Introduction}
+
+\subsection{Purpose of the package}
+
+\begin{frame}
+\frametitle{The CWMEM package}
+
+The CWREM package has been developed to estimate Cluster Weighted Modeling (CWM) models as described in (\cite{Murphy}) and (\cite{Minotti}).\\
+R code has been inspired by (\cite{Murphy}) original Matlab code, which has been converted in R and improved. Until now, it is the unique R package to estimate CWM models. \\
+The package provides the estimation of local CWM and performs the classification tasks by means of posterior group probabilities.\\ The models' parameters estimation is performed by EM algorithm (\cite{Dempster}). 
+
+
+\end{frame}
+
+
+
+\subsection{Review of CWM framework}
+
+\begin{frame}\small
+\frametitle{Review of CWM}
+
+CMW framework is expressed by the general formula:
+\[p(\bx,y)=\sum^{G}_{g=1} p(y|\bx,\Omega_g)\, p(\bx|\Omega_g)\, \pi_g\]
+where $\pi_g=p(\Omega_g)$ is the mixing weight of group $\Omega_g$, $p(\bx|\Omega_g)$ is the probability density
+of $\bx$ given $\Omega_g$ and $p(y|\bx,\Omega_g)$ is the conditional density of the response variable $Y$ given
+the predictor vector $\bx$ and the group $\Omega_g$, $g=1, \ldots, G$
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Review of CWM}
+
+The $p(\bx|\Omega_g)$, $g=1, \ldots, G$ are usually assumed to be multivariate Gaussian, that is $p(\bx|\Omega_g) = \phi_d(\bx; \bmu_g, \bSigma_g)$. Moreover, the $p(y|\bx,\Omega_g)$, $g=1, \ldots, G$, can be modeled again by a Gaussian distribution with  variance $\sigma^2_{\varepsilon, g}$ around some deterministic function of $\bx$, say $\gamma_g(\bx)$; here, we refer to local models given by a linear mapping $\gamma_g(\bx) = \bb'_g \bx + b_{g0}$, 
+with $\bb_g \in \Re^d, b_{g0} \in \Re$ and then:
+\[p(\bx,y; \btheta)=\sum^{G}_{g=1} \phi(y; \bb_g'\bx+b_{g0},  \sigma^2_{\varepsilon, g}) 
+\, \phi_d(\bx; \bmu_g, \bSigma_g)\, \pi_g \]
+
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Review of CWM}
+
+It has been demonstrated (\cite{MIV}) that CWM generalizes Finite Mixtures of Regressions (FMR),
+\[
+p(y|\bx;  \bpsi) = \sum^{G}_{g=1} p(y|\bx, \Omega_g) \pi_g = \sum^{G}_{g=1} \phi(y; \bb_g'\bx+b_{g0},  \sigma^2_{\varepsilon, g})\,  \pi_g
+\] and Finite Mixtures of Regressions with Concomitant variables (FMRC),
+\[
+p(y|\bx;  \bpsi^*)  = \sum^{G}_{g=1} \phi(y; \bb_g'\bx+b_{g0},  \sigma^2_{\varepsilon, g})\,  p(\Omega_g|\bx, \bgamma)
+\]
+
+\end{frame}
+
+\subsection{The EM algorithm}
+
+\begin{frame}
+\frametitle{The expectation step }
+
+\small{
+
+The maximum-likelihood estimation of parameters $\bpsi_g=(\pi_g,\bmu_g,\bSigma_g,b_{g0},\bb_{g},\sigma_{\epsilon,g}^2)'$ ($g=1, \ldots, G$)  can be performed by means of the EM algorithm (\cite{Dempster}), here re-written for the CWM following the usual statistical approach introduced for Mixtures Models. \\
+
+\textbf{E-step}:  Given the current estimates $\hat{\bpsi}^{(k)}_{g}$ for the $g$-th group at the $k$-th iteration, replace the missing value $z_{ng}$ (where $z_{ng}=1$ if the $n$-th observation comes from the $g$-th group and $z_{ng}=0$ elsewhere) by the estimate of the posterior probability $\tau_{ng}^{(k)}$ $(n=1,\ldots, N; \; g=1, \ldots, G)$ of group membership conditional on $(\bx_n,y_n)$:
+\[ \hat{\tau}_{ng}^{(k)} = \frac{\pi_g^{(k)} \phi(y_n;\bb_{g}'^{(k)}\bx_n+b_{g0}^{(k)},\sigma^{2(k)}_{\epsilon,g}) \phi_d(\bx_n; \bmu_g^{(k)},\bSigma_{g}^{(k)})} {\sum_{j=1}^G \pi_j^{(k)} \phi(y_n;\bb_{j}'^{(k)}\bx_n+b_{j0}^{(k)},\sigma^{2(k)}_{\epsilon,j}) \phi_d(\bx_n; \bmu_j^{(k)},\bSigma_j^{(k)})}. \]
+
+}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{The maximization step}
+
+
+\textbf{M-step}: Given the estimates $\hat{\tau}_{ng}^{(k)}$, it can be proved that the updates of the parameter estimates $\hat{\bpsi}^{(k+1)}_{g}$  $(g=1, \ldots, G)$ at the $(k+1)$-th iteration are:
+\tiny{
+\begin{eqnarray}
+\pi_{g}^{(k+1)} &=& \frac{1}{N} \sum_{n=1}^N \tau_{ng}^{(k)} \nonumber \\
+\bmu_g^{(k+1)} &=& \frac{\sum_{n=1}^N \tau_{ng}^{(k)}  \bx_n}{\sum_{n=1}^N \tau_{ng}^{(k)}} \nonumber \\
+\bSigma_g^{(k+1)} &=& \frac{\sum_{n=1}^N \tau_{ng}^{(k)}  (\bx_n - \bmu_g^{(k+1)})(\bx_n - \bmu_g^{(k+1)})'}{\sum_{n=1}^N \tau_{ng}^{(k)}} \nonumber \\
+\bb_{g}^{(k+1)} &=& \frac{\frac{\sum_{n=1}^N \tau_{ng}^{(k)} y_n \bx_n}{\sum_{n=1}^N \tau_{ng}^{(k)}}-\frac{\sum_{n=1}^N \tau_{ng}^{(k)} y_n}{\sum_{n=1}^N \tau_{ng}^{(k)}}\frac{\sum_{n=1}^N \tau_{ng}^{(k)} \bx_n}{\sum_{n=1}^N \tau_{ng}^{(k)}}}{\frac{\sum_{n=1}^N \tau_{ng}^{(k)} \bx'_n\bx_n}{\sum_{n=1}^N \tau_{ng}^{(k)} }-(\frac{\sum_{n=1}^N \tau_{ng}^{(k)} \bx_n}{\sum_{n=1}^N \tau_{ng}^{(k)} })^2} \nonumber \\
+%=\bb_g^{(k)} \frac{\sum_{n=1}^N \tau_{ng}^{(k)} \bx'_n \bx_n}{\sum_{n=1}^N \tau_{ng}^{(k)}}- (\frac{\sum_{n=1}^N \tau_{ng}^{(k)} \bx_n}{\sum_{n=1}^N \tau_{ng}^{(k)}}) \\
+%\mybx_g - \my_g \mbx_g  =\bb_g^{(k)} \mbxbx_g - \mbx_g^2  \qquad g=1, \ldots, G \: 
+b_{g0}^{(k+1)} &=& \frac{\sum_{n=1}^N \tau_{ng}^{(k)} y_n}{\sum_{n=1}^N \tau_{ng}^{(k)}}-\bb_{g}^{'(k+1)}\frac{\sum_{n=1}^N \tau_{ng}^{(k)} \bx_n}{\sum_{n=1}^N \tau_{ng}^{(k)}} \nonumber \\
+%=  \frac{\sum_{n=1}^N \tau_{ng}^{(k)} y_n}{\sum_{n=1}^N \tau_{ng}^{(k)} }-\bb_g^{'(k)} \frac{\sum_{n=1}^N \tau_{ng}^{(k)} \bx_n}{\sum_{n=1}^N \tau_{ng}^{(k)}} \\
+%\my_g -\bb_g^{'(k)} \mbx_g
+\sigma_{\epsilon,g}^{2(k+1)} &=& \frac{\sum_{n=1}^N \tau_{ng}^{(k)} [y_n-(\bb_g^{'(k+1)}\bx_n+b_{g0}^{'(k+1)})]^2} {\sum_{n=1}^N \tau_{ng}^{(k)}} \nonumber .
+\end{eqnarray}
+}
+\end{frame}
+
+
+\section{Structure of the package}
+\subsection{Structure}
+
+\begin{frame}
+	\frametitle{General outline}
+	
+	\textbf{cwmEm} package has been compiled under 2.9.1 R version. Current release is 0.0.1.\\
+	S3 programming style has been used, but an upgrade to the more flexible S4 programming style is scheduled in next software releases. See (\cite{Chambers}) for further details on programming with R language.\\
+	
+	The core function is \textbf{cwrEm} function that creates \textit{cwr}objects. A cwrObj object contains cwr local models parameters estimates, prior and posteriors \& groups membership informations, goodness of fit indexes.\\
+	
+	
+\end{frame}
+
+%known issues
+
+\begin{frame}
+	\frametitle{General outline}
+	
+	\textbf{Summary} and \textbf{print}  methods are applicable to \textit{cwr} objects to obtain and summarize parameters' estimations. \textbf{Plot} method is available if the input space pertains to $R^2$.\\
+	
+	Currently \textbf{cwmEm} assumes that local models are Gaussian, even if cluster weighted methodology may be extended to mixtures of non - Gaussian distributions.\\
+	The initialization process use k-means algorithm to assign each observation to one of the nc groups on which initial parameters are estimated.
+
+\end{frame}
+
+\subsection{Functions}
+
+\begin{frame}[fragile]
+	\frametitle{The cwrEm function}
+
+\small{
+	The cwrEm function is the core function of \textbf{cwmEm package}. It receives data inputs and returns the block of estimates bundled in a \textbf{cwrObj} object. Optional parameters regulates eventual estimation constraints or the estimation stop rules.\\
+	
+	The compulsory parameters are:
+\begin{enumerate}
+	\item X: the independent sample observations, a $N*nc$ numeric data matrix (or data frame).
+	\item Y: the dependent sample observations, a $N*1$ numeric data matrix (or data frame).
+	\item nc: the number of clusters to estimate.
+\end{enumerate}
+}
+An example of cwrEm call is:
+\begin{verbatim}
+helloCwr=cwrEm(X=dataSet[,1:2], Y=dataSet[,3], nc=3)
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{The cwrEm function}
+\scriptsize{
+The output of cwrEm function are cwrEm objects. Useful informations contained in their slots are:
+\begin{enumerate}
+	\item \textbf{muX, muY, sigmaX, sigmaY}: matrix or vectors of local groups parameters estimates
+	\item \textbf{beta0}: an array of intercepts, whose structure depend by the number of input variables and the number of groups.
+	\item \textbf{priorC, posterior, group}: priors and posterior probabilities, final group membership
+	\item \textbf{logLik, nPar, aic, bic, N}: informations used to estimated goodness of fit indices based on log-likelihood.
+\end{enumerate}
+
+Summary, print and plot methods are available for cwrEm objects. They can simply be called by the syntax: print(cwrObject), summary(cwrObject), plot(cwrObject). A call to plot method will return error if the sample space is bigger than $R^2$.
+
+
+}
+\end{frame}
+
+\begin{frame}
+\frametitle{The stepCwr function}
+
+EM algorithm achieves only local maxima. Therefore in practice it is restarted and the better solution in terms of log likelihood is elected. At each restart the cwrEm parameters are initialized by means of the parameters estimated in the previous step, if they gained a likelihood increase. \textbf{stepCwr} function applies such method to cluster weighed modeling framework. \\
+
+The multiple restarts solution has been introduced for the first time in the CWM framework, following the proposal implemented in the \textbf{flexmix} (\cite{Leisch}) package.
+
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{The stepCwr function}
+The compulsory arguments of stepCwr function are the same of cwrEm function. Other arguments specify the proportion of the sample set to be used (to obtain quicker computation), the maximum number of iteration and if a change of the sampled data set is allowed.
+\small{
+
+\begin{verbatim}
+> args(cwrEm)
+function (X, Y, nc, prop = 0.1, nIter = 10, 
+changeTrainingSet = FALSE) 
+NULL
+\end{verbatim}
+}
+
+\end{frame}
+
+
+
+\subsection{Known issues}
+
+\begin{frame}
+\frametitle{Kwown issues}
+Known issues are:
+\begin{itemize}
+	\item Numerical problems that may arise during estimation process. The occurrence of such problems depends by the empirical given matrix.
+	\item Slowness of the estimation process on big dataset.
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Next steps}
+Following improvements have been planned:
+\begin{itemize}
+	\item Swicht to S4 programming framework.
+	\item Rewrite the EM kernel in C++ to obtain faster estimations.
+	\item Eventually optimize the computational kernel, by optimizing the EM algorithm and by improving the initialization process.
+	\item Mixed variables, non-linear local models and multilevel data structures.
+\end{itemize}
+
+\end{frame}
+
+\section{Simulation study}
+
+\subsection{Description of the examples}
+
+
+\begin{frame}
+\frametitle{Description and purpose of simulations}
+\scriptsize{
+Next slides show CWM methodology applied on a simulated data set. CWREM package has been used. Comparison with FMR and FMRC as estimated by (\cite{Leisch}) is discussed.\\
+The artificial data set has been generated as follows:
+\begin{itemize}
+	\item tree G groups, whose sample dimension was: $N_1=100, N_2=600, N_3=300$.
+	\item The samples were generated according to the parameters for $p(x|\Omega_g)$ and $p(y|x,\Omega_g)$ 
+	\[
+	\begin{gathered}
+  {X_{{G_1}}} \sim N(5,2) \to y = 40 + 6x + N(0,2) \hfill \\
+  {X_{{G_2}}} \sim N(10,2) \to y = 40 - 1.5x + N(0,2) \hfill \\
+  {X_{{G_3}}} \sim N(20,2) \to y = 150 - 7x + N(0,2) \hfill \\ 
+\end{gathered}  \]
+	\item The estimation process has been repeitee 100 times and goodness of classification statistics have been recorded.
+\end{itemize}
+}
+\end{frame}
+%limiti di flexmix 17
+
+\subsection{Results and discussion}
+
+\begin{frame}
+\frametitle{Classification graphs: FMR, FMRC, CWM compared}
+\begin{figure}[h] 
+	\begin{center}
+		\includegraphics[height=7 cm, width=7 cm]{A3}
+	\end{center}
+  \caption{\textit {\rm Original data and results from FMR, FMRC and CWM.}}\label{fig:A3}
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Classification results}
+	Following conclusions may be drawn from the application CWM, FMR and FMRC frameworks on the data generating process:
+	\begin{enumerate}
+		\item FMR and FMRC do not correctly classify the original observations.
+		\item FMR results shows that in 38 out of 100 trials the misclassification
+rate varies from 7.3\% to 11.1\%, while in 62 out of 100 trials the misclassification
+rate varies from 25.6\% to 49.5\%.
+	\item As for FMRC is concerned, in 49 out of 100 trials the misclassification rate is null, while in 51 out of 100 trials the misclassification rate varies from 24.5\% to 50\%.
+	\item Finally, in CWM the misclassification rate is 0.1\% in only 5 out of 100 trials, while in the other cases no misclassifications are reported.
+\end{enumerate}
+
+\end{frame}
+
+
+\appendix
+
+\section{Bibliography}
+
+\begin{frame}
+
+\frametitle{The bibliography}
+
+\begin{thebibliography}{9}\scriptsize
+
+	\bibitem[Minotti2009]{Minotti} \textsc{Minotti, S.C.; Vittadini, G.: Local Multilevel Modeling for Comparisons of Institutional Performance}: \textit{Data Analysis and Classification:
+from the exploratory to the confirmatory approach. Springer, Berlin, in press, 2009}
+	\bibitem[MVI2009]{MIV} \textsc{Minotti S.C., Ingrassia S., Vittadini G.: Local Statistical Modeling by Cluster-Weighted}: \textit{Quaderno di Dipartimento QD 2009/26 (Febbraio 2009), Dipartimento di Statistica, Università degli Studi di Milano-Bicocca}
+	\bibitem[Murphy]{Murphy}  \textit{http://people.cs.ubc.ca/~murphyk/Software/index.html}
+	\bibitem[Chambers2008]{Chambers} \textsc{Chambers, J. M.: Sofware for data analysis. Programming with R}: \textit{Springer, 2008}
+	\bibitem[Dempster1977]{Dempster} \textsc{Dempster, A.P., Laird, N.M., Rubin, D.B.: Maximum likelihood from incomplete data via the EM-algorithm}: \textit{JRSS(B) 39, 1-38, 1977}
+	\bibitem[Gershenfeld1999]{Ger99} \textsc{Gershenfeld, N. (1999) : itshape The Nature of Mathematical Modelling}, \textit{ Cambridge University Press, Cambridge, 101-130.}		
+\bibitem[Leish2004]{Leisch} \textsc{Leisch, F. (2004). Flexmix: A general framework for finite mixture models and latent class regression in R.} \textit{Journal of Statistical Software, \textbf{11}(8), 1-18}.
+\end{thebibliography}
+
+\end{frame}
+
+
+
+\end{document} 
