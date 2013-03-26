@@ -5,7 +5,10 @@
   This function estimates CWR models via EM algoritms. An object of class cwrObj is returned containing posterior probabilities and group parameters.
 }
 \usage{
-cwrEm(X, Y, nc, max_iter = 1000, thresh = 0.01, cov_typeX = "full", cov_typeY = "full", clamp_weights = FALSE, create_init_params = TRUE, cwrStart = NULL, cov_priorX = NULL, cov_priorY = NULL, verbose = TRUE, regress = TRUE, clamp_covX = FALSE, clamp_covY = FALSE)
+cwrEm(X, Y, nc, max_iter = 1000, thresh = 0.01, cov_typeX = "full", 
+cov_typeY = "full", clamp_weights = FALSE, create_init_params = TRUE, 
+cwrStart = NULL, cov_priorX = NULL, cov_priorY = NULL, verbose = TRUE, 
+regress = TRUE, clamp_covX = FALSE, clamp_covY = FALSE)
 }
 \arguments{
   \item{X}{X data matrix }

@@ -15,7 +15,9 @@
 \seealso{\code{\link{cwrEm}}
 }
 \examples{
-\dontrun{data(geyser)
+\dontrun{
+library(MASS)
+data(geyser, package="MASS")
 x=geyser[,1]
 y=geyser[,2]                            
 ciao=stepCwr(x,y,nc=2)

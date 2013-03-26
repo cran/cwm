@@ -1,5 +1,11 @@
 exportPattern("^[[:alpha:]]+")
-
+import(methods)
+import(MASS)
+importFrom("stats","kmeans")
+#importFrom("MASS","geyser") #nn va
+importFrom("matlab","zeros", "size","numel","ones","ndims","repmat","eye","isempty")
+importFrom("permute", "allPerms")
+#import(vegan)
 S3method(print, cwrObj)
 S3method(summary, cwrObj)
 S3method(plot, cwrObj)

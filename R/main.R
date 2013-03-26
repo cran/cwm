@@ -8,7 +8,7 @@
 
 cwrEm<-function(X,Y, nc, max_iter=1000, thresh=0.01, cov_typeX="full", cov_typeY="full",clamp_weights=FALSE, create_init_params=TRUE, cwrStart=NULL, cov_priorX=NULL,cov_priorY=NULL, verbose=TRUE, regress=TRUE, clamp_covX=FALSE, clamp_covY=FALSE) 
 {
-	require("matlab")
+	#require("matlab")
 	pmt<-proc.time();  #start process time monitor
 	X=t(as.matrix(X)); #transpose matrix
 	Y=t(as.matrix(Y)); #transpose matrix
@@ -215,7 +215,7 @@ stepCwr<-function(X, Y, nc, prop=0.1, nIter=10, changeTrainingSet=FALSE)
 
 bestPermutation<-function(origClass, inizOutput) #orig: valori veri, inizOutput: classificazione
 {
-	require(vegan)
+	#require(vegan)
 	out=list() 
 	inizOutput=as.numeric(inizOutput) #conversione necessaria
 	.Sostituisci=function(cosa, conCosa) #cosa è in vettore di numeri indice di gruppi

@@ -19,11 +19,13 @@ No value is returned.}
 \note{ S3 method.}
 \seealso{  \code{\link{cwrEm}}}
 \examples{
-data(geyser)
+\dontrun{
+data(geyser, package="MASS")
 x=geyser[,1]
 y=geyser[,2]                            
 ciao=cwrEm(x,y,nc=2)
 plot(ciao)
+}
 }
 \keyword{ methods }
 

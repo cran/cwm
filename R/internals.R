@@ -251,7 +251,7 @@
 	}
 	if(method=="kmeans")
 	{
-		require(cluster)
+		#require(cluster)
 		#c'è un problema: implemento solo le le matrici
 		#con varianza covarianza completa
 		kmeans4dataM=kmeans(t(dataM),M) #esegue kmenas   per 2 gruppi
